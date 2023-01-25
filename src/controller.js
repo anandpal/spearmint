@@ -12,29 +12,6 @@ async function createUser(req,res) {
     }
 }
 
-async function login(req,res) {
-    try {
-        let data=req.body
-        let {email,password}=data
-        const login = await userModel.find({email:email,password:password})
-        if(!login) return res.status(400).json({error:"Sommehing went wrong"})
-        const token = jwt.sign({
-            userId: login._id.toString()
-        }, "spearmint", { expiresIn: '24h' })
-
-        res.setHeader("x-api-key", token)
-
-        let obj = {
-            userId: login._id,
-            token: token
-        }
-        res.status(200).send({message: "User login successfull", data: obj })
-
-    } catch (error) {
-        return res.status(500).json({error:error.message})
-    }
-}
-
 
 
 async function createTask(req,res) {
@@ -57,16 +34,6 @@ async function getTask(req,res) {
     }
 }
 
-async function getTaskbyId(req,res) {
-    try {
-        const {todoId}=req.params
-        const user = await toDoModel.findById(todoId)
-        if(!user) return res.status(400).json({error:"Sommehing went wrong"})
-        res.status(201).json({data:user})
-    } catch (error) {
-        return res.status(500).json({error:error.message})
-    }
-}
 
 async function updateTask(req,res) {
     try {
@@ -113,4 +80,4 @@ async function getOverdueTask(req,res) {
 }
 
 
-module.exports = {createUser, createTask,getTask,getTaskbyId,updateTask,deleteTask,getCompletedTask,getOverdueTask}
+module.exports = {createUser, createTask,getTask,updateTask,deleteTask,getCompletedTask,getOverdueTask}
